@@ -1,172 +1,253 @@
 <!doctype html>
 <html>
 <head>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Confessional of Future Dreams</title>
-  <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
-  <style>
-
-.instrument-serif-regular {
-  font-family: "Instrument Serif", serif;
-  font-weight: 400;
-  font-style: normal;
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Confessional of Future Dreams</title>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<style>
+body {
+  font-family: "IBM Plex Mono", monospace;
+  background: url('https://i-p.rmcdn.net/6564f807fd804900278f36db/5175659/image-252d07f8-1150-4519-a6fe-f76626da04c4.png?e=webp&nll=true&cX=0&cY=108&cW=1978&cH=881') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding: 40px;
 }
-
-.instrument-serif-regular-italic {
+h2 { font-size: 36px; margin-bottom: 20px; }
+.instrument-serif-regular { font-family: "Instrument Serif", serif; font-weight: 400; font-style: normal; }
+button {
+  font-family: "IBM Plex Mono", monospace;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 12px 18px;
+  margin: 6px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+button:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
+button:disabled { opacity: 0.4; cursor: default; }
+.timer { font-size: 18px; margin-top: 12px; }
+audio { display: block; margin: 20px auto; width: 100%; max-width: 400px; }
+.status { margin-top: 12px; font-size: 17px; }
+#photoPreview { 
+  display: none; 
+  margin: 12px auto 0 auto;
+  max-width:300px; 
+  border-radius:10px; 
+  display: block;
+}
+.page { display: none; }
+.page.active { display: block; }
+input[type="text"] {
+  font-family: "IBM Plex Mono", monospace;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.15);
+  color: white;
+  width: 80%;
+  max-width: 300px;
+  margin-top: 12px;
+}
+#audioPrompt {
   font-family: "Instrument Serif", serif;
   font-weight: 400;
   font-style: italic;
+  font-size: 30px;
+  margin: 12px 0;
 }
-
-
-
-    body {
-      font-family: "IBM Plex Mono", monospace;
-      background: url('https://i-p.rmcdn.net/6564f807fd804900278f36db/5175659/image-252d07f8-1150-4519-a6fe-f76626da04c4.png?e=webp&nll=true&cX=0&cY=108&cW=1978&cH=881') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      text-align: center;
-      padding: 40px;
-    }
-    h2 { font-size: 26px; margin-bottom: 20px; }
-    button {
-      font-family: "IBM Plex Mono", monospace;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 12px 18px;
-      margin: 6px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(5px);
-    }
-    button:hover:not(:disabled) {
-      background: rgba(255,255,255,0.25);
-    }
-    button:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-    .timer { font-size: 18px; margin-top: 12px; }
-    audio { display: block; margin: 20px auto; width: 100%; max-width: 400px; }
-    .status { margin-top: 12px; font-size: 17px; }
-  </style>
+</style>
 </head>
 <body>
-  <h2>Confessional of Future Dreams</h2>
+<h2>Confessional of Future Dreams</h2>
 
+<!-- Page 0: Introduction -->
+<div id="page0" class="page active">
+  <p id="introText">An Interactive Community Experience</p>
+  <input type="text" id="userName" placeholder="Start by entering your name" />
+  <br>
+  <button id="introNextBtn" disabled>Next</button>
+</div>
+
+<!-- Page 1: Audio Recording -->
+<div id="page1" class="page">
+  <p id="audioDescription">🔴 PRESS the record button, then 🗣️ SPEAK to answer the question:</p>
+  <p id="audioPrompt">What dreams do you have for the future?</p>
   <div>
     <button id="recordBtn">Record</button>
     <button id="pauseBtn" disabled>Pause</button>
     <button id="stopBtn" disabled>Stop</button>
-    <button id="resetBtn" disabled>Record Again</button>
+    <button id="nextBtn" disabled>Next</button>
   </div>
-
   <div class="timer" id="timer">00:00 / 00:30</div>
   <audio id="player" controls></audio>
+  <div class="status" id="status1"></div>
+</div>
 
-  <div style="margin-top:12px">
-    <button id="submitBtn" disabled>Submit My Future Dream</button>
-  </div>
-
-  <div class="status" id="status"></div>
+<!-- Page 2: Photo Capture -->
+<div id="page2" class="page">
+  <p id="audioDescription">📸 Take a picture so the Pigeon Historian Scientists can preserve your dream.</p>
+  <button id="photoBtn">Take Picture</button>
+  <button id="retakeBtn" style="display:none;">Retake Photo</button>
+  <br>
+  <img id="photoPreview" />
+  <br>
+  <button id="submitBtn" disabled>Submit My Future Dream</button>
+  <div class="status" id="status2"></div>
+</div>
 
 <script>
-const MAX_SECONDS = 30;
-let mediaRecorder, audioStream, chunks = [];
-let recordedBlob = null, timerInterval = null, seconds = 0;
+document.addEventListener('DOMContentLoaded', () => {
 
+let userName = '';
+const MAX_SECONDS = 30;
+let mediaRecorder, audioStream, chunks=[], recordedBlob=null, seconds=0, timerInterval=null;
+let photoBlob=null;
+
+// Reset timers
+let submitResetTimer = null;
+let inactivityTimer = null;
+let inactivityCountdownInterval = null;
+
+// Pages
+const page0 = document.getElementById('page0');
+const page1 = document.getElementById('page1');
+const page2 = document.getElementById('page2');
+
+// Page0 elements
+const userNameInput = document.getElementById('userName');
+const introNextBtn = document.getElementById('introNextBtn');
+
+// Page1 elements
 const recordBtn = document.getElementById('recordBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 const stopBtn = document.getElementById('stopBtn');
-const resetBtn = document.getElementById('resetBtn');
-const submitBtn = document.getElementById('submitBtn');
+const nextBtn = document.getElementById('nextBtn');
 const player = document.getElementById('player');
-const statusEl = document.getElementById('status');
+const status1 = document.getElementById('status1');
 const timerEl = document.getElementById('timer');
 
+// Page2 elements
+const photoBtn = document.getElementById('photoBtn');
+const retakeBtn = document.getElementById('retakeBtn');
+const photoPreview = document.getElementById('photoPreview');
+const submitBtn = document.getElementById('submitBtn');
+const status2 = document.getElementById('status2');
+
+// Create inactivity overlay
+const inactivityOverlay = document.createElement('div');
+inactivityOverlay.style.position='fixed';
+inactivityOverlay.style.top='0'; inactivityOverlay.style.left='0';
+inactivityOverlay.style.width='100%'; inactivityOverlay.style.height='100%';
+inactivityOverlay.style.background='rgba(0,0,0,0.85)';
+inactivityOverlay.style.color='white';
+inactivityOverlay.style.fontSize='36px';
+inactivityOverlay.style.display='flex';
+inactivityOverlay.style.flexDirection='column';
+inactivityOverlay.style.justifyContent='center';
+inactivityOverlay.style.alignItems='center';
+inactivityOverlay.style.zIndex='9999';
+inactivityOverlay.style.display='none';
+document.body.appendChild(inactivityOverlay);
+
+let inactivityCountdown = 5;
+
+// ----------------- Functions -----------------
+function resetToIntro() {
+  page0.classList.add('active');
+  page1.classList.remove('active');
+  page2.classList.remove('active');
+  userNameInput.value = '';
+  introNextBtn.disabled = true;
+  player.src = '';
+  photoPreview.src = '';
+  photoPreview.style.display='none';
+  retakeBtn.style.display='none';
+  submitBtn.disabled = true;
+  status1.textContent = '';
+  status2.textContent = '';
+  recordedBlob = null;
+  photoBlob = null;
+  clearTimeout(submitResetTimer);
+  clearTimeout(inactivityTimer);
+  clearInterval(inactivityCountdownInterval);
+  inactivityOverlay.style.display='none';
+  resetInactivityTimer();
+}
+
+// Enable next when name is entered
+userNameInput.addEventListener('input', ()=>{
+  introNextBtn.disabled = userNameInput.value.trim()==='';
+});
+
+// Intro Next button
+introNextBtn.onclick = ()=>{
+  userName = userNameInput.value.trim();
+  if(!userName) return;
+  page0.classList.remove('active');
+  page1.classList.add('active');
+};
+
+// ----- Audio Recording -----
 function updateTimer() {
   seconds++;
-  if (seconds >= MAX_SECONDS) stopRecording();
-  const mm = String(Math.floor(seconds / 60)).padStart(2,'0');
-  const ss = String(seconds % 60).padStart(2,'0');
+  if(seconds >= MAX_SECONDS) stopRecording();
+  const mm = String(Math.floor(seconds/60)).padStart(2,'0');
+  const ss = String(seconds%60).padStart(2,'0');
   timerEl.textContent = `${mm}:${ss} / 00:30`;
 }
 
 async function startRecording() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    alert('Microphone not supported on this device.');
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alert('Microphone not supported');
     return;
   }
   try {
-    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
     mediaRecorder = new MediaRecorder(audioStream);
-  } catch (err) {
-    statusEl.textContent = 'Microphone access denied: ' + err.message;
+  } catch(e){
+    status1.textContent='Mic access denied: '+e.message;
     return;
   }
 
-  chunks = [];
-  seconds = 0;
-  timerInterval = setInterval(updateTimer, 1000);
+  chunks=[]; seconds=0;
+  timerInterval=setInterval(updateTimer,1000);
   mediaRecorder.ondataavailable = e => chunks.push(e.data);
   mediaRecorder.onstop = convertToMp3;
 
   mediaRecorder.start();
-  statusEl.textContent = 'Recording...';
-  recordBtn.disabled = true;
-  pauseBtn.disabled = false;
-  stopBtn.disabled = false;
-  resetBtn.disabled = true;
-  submitBtn.disabled = true;
+  status1.textContent='Recording...';
+  recordBtn.disabled=true; pauseBtn.disabled=false; stopBtn.disabled=false; nextBtn.disabled=true;
 }
 
-function pauseResume() {
-  if (!mediaRecorder) return;
-  if (mediaRecorder.state === 'recording') {
-    mediaRecorder.pause();
-    pauseBtn.textContent = 'Resume';
-    clearInterval(timerInterval);
-    statusEl.textContent = 'Paused';
-  } else if (mediaRecorder.state === 'paused') {
-    mediaRecorder.resume();
-    pauseBtn.textContent = 'Pause';
-    timerInterval = setInterval(updateTimer, 1000);
-    statusEl.textContent = 'Recording...';
+function pauseResume(){
+  if(!mediaRecorder) return;
+  if(mediaRecorder.state==='recording'){
+    mediaRecorder.pause(); pauseBtn.textContent='Resume'; clearInterval(timerInterval); status1.textContent='Paused';
+  } else if(mediaRecorder.state==='paused'){
+    mediaRecorder.resume(); pauseBtn.textContent='Pause'; timerInterval=setInterval(updateTimer,1000); status1.textContent='Recording...';
   }
 }
 
-function stopRecording() {
-  if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
+function stopRecording(){
+  if(mediaRecorder && (mediaRecorder.state==='recording'||mediaRecorder.state==='paused')){
     mediaRecorder.stop();
     clearInterval(timerInterval);
-    pauseBtn.disabled = true;
-    stopBtn.disabled = true;
+    pauseBtn.disabled=true; stopBtn.disabled=true;
   }
 }
 
-function resetRecording() {
-  recordedBlob = null;
-  chunks = [];
-  player.src = '';
-  submitBtn.disabled = true;
-  resetBtn.disabled = true;
-  recordBtn.disabled = false;
-  pauseBtn.disabled = true;
-  stopBtn.disabled = true;
-  statusEl.textContent = '';
-  timerEl.textContent = '00:00 / 00:30';
-}
-
-async function convertToMp3() {
-  const blob = new Blob(chunks, { type: 'audio/webm' });
+async function convertToMp3(){
+  const blob = new Blob(chunks,{type:'audio/webm'});
   const arrayBuffer = await blob.arrayBuffer();
   const audioCtx = new AudioContext();
   const decoded = await audioCtx.decodeAudioData(arrayBuffer);
@@ -174,50 +255,96 @@ async function convertToMp3() {
 
   const mp3encoder = new lamejs.Mp3Encoder(1, decoded.sampleRate, 128);
   const samples = new Int16Array(channelData.length);
-  for (let i = 0; i < channelData.length; i++) {
-    samples[i] = channelData[i] * 32767;
-  }
+  for(let i=0;i<channelData.length;i++) samples[i] = channelData[i]*32767;
   const mp3Data = [];
   const chunkSize = 1152;
-  for (let i = 0; i < samples.length; i += chunkSize) {
-    const sampleChunk = samples.subarray(i, i + chunkSize);
+  for(let i=0;i<samples.length;i+=chunkSize){
+    const sampleChunk = samples.subarray(i,i+chunkSize);
     const mp3buf = mp3encoder.encodeBuffer(sampleChunk);
-    if (mp3buf.length > 0) mp3Data.push(mp3buf);
+    if(mp3buf.length>0) mp3Data.push(mp3buf);
   }
   const end = mp3encoder.flush();
-  if (end.length > 0) mp3Data.push(end);
+  if(end.length>0) mp3Data.push(end);
 
-  recordedBlob = new Blob(mp3Data, { type: 'audio/mp3' });
+  recordedBlob = new Blob(mp3Data,{type:'audio/mp3'});
   player.src = URL.createObjectURL(recordedBlob);
-  statusEl.textContent = 'Your Future Dream is ready for the time capsule.';
-  submitBtn.disabled = false;
-  resetBtn.disabled = false;
-  recordBtn.textContent = 'Record';
-  recordBtn.disabled = false;
-  pauseBtn.textContent = 'Pause';
-  if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+  status1.textContent='Audio ready!';
+  nextBtn.disabled=false;
+
+  if(audioStream) audioStream.getTracks().forEach(t=>t.stop());
 }
 
-function submitAndReset() {
-  if (!recordedBlob) return;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(recordedBlob);
-  a.download = 'MyFutureDream.mp3';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+// Next button: go to photo page
+nextBtn.onclick = ()=>{
+  if(!recordedBlob) return;
+  page1.classList.remove('active');
+  page2.classList.add('active');
+};
 
-  statusEl.textContent = 'Thank you for submitting!';
-  submitBtn.disabled = true;
-  setTimeout(resetRecording, 5000);
+// ----- Photo Capture -----
+photoBtn.onclick = takePhoto;
+retakeBtn.onclick = takePhoto;
+
+function takePhoto(){
+  const input = document.createElement('input');
+  input.type='file'; input.accept='image/*'; input.capture='environment';
+  input.onchange = ()=>{
+    if(!input.files[0]) return;
+    photoBlob = input.files[0];
+    const reader = new FileReader();
+    reader.onload = e=>{
+      photoPreview.src=e.target.result;
+      photoPreview.style.display='block';
+      retakeBtn.style.display='inline-block';
+      status2.textContent='Photo ready!';
+      submitBtn.disabled=false;
+    };
+    reader.readAsDataURL(photoBlob);
+  };
+  input.click();
 }
 
-// Button wiring
+// Final Submit previews photo and triggers 10s reset
+submitBtn.onclick = ()=>{
+  if(!photoBlob) return;
+  status2.textContent='Thank you for submitting! Returning to START in 5s...';
+  submitBtn.disabled=true;
+
+  submitResetTimer = setTimeout(()=>{ resetToIntro(); }, 5000);
+};
+
+// ----------------- Inactivity Tracking -----------------
+function resetInactivityTimer(){
+  clearTimeout(inactivityTimer);
+  clearInterval(inactivityCountdownInterval);
+  inactivityOverlay.style.display='none';
+  inactivityCountdown = 5;
+  inactivityTimer = setTimeout(()=>{
+    inactivityOverlay.style.display='flex';
+    inactivityCountdownInterval = setInterval(()=>{
+      inactivityOverlay.textContent = `Are you still there? Returning to START in ${inactivityCountdown}...`;
+      inactivityCountdown--;
+      if(inactivityCountdown<0){
+        clearInterval(inactivityCountdownInterval);
+        resetToIntro();
+      }
+    },1000);
+  },20000);
+}
+
+// Reset inactivity timer on any interaction
+['click','keydown','touchstart'].forEach(evt=>{
+  document.addEventListener(evt, resetInactivityTimer, {passive:true});
+});
+
+resetInactivityTimer();
+
+// ----------------- Button wiring -----------------
 recordBtn.addEventListener('click', startRecording);
 pauseBtn.addEventListener('click', pauseResume);
 stopBtn.addEventListener('click', stopRecording);
-resetBtn.addEventListener('click', resetRecording);
-submitBtn.addEventListener('click', submitAndReset);
+
+});
 </script>
 </body>
 </html>
